@@ -233,7 +233,7 @@ export default function Home() {
       {/* Subtle breadcrumb */}
       <div className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10">
         <a
-          href="https://lydiastudio.com"
+          href="https://lydiastud.io"
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs sm:text-sm transition-colors flex items-center gap-1.5"
