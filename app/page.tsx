@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import ResourceCard from "@/components/ResourceCard";
 import type { Resource, Category, SupportNeed, SensoryLoad, SetupEffort, PriceType } from "@/types/resource";
 import { SUPPORT_NEED_LABELS, CATEGORY_LABELS } from "@/types/resource";
@@ -48,6 +48,7 @@ export default function Home() {
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [selectedFeelingGroup, setSelectedFeelingGroup] = useState<string | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const availableSupportNeeds = useMemo(() => {
     const needsSet = new Set<SupportNeed>();
@@ -166,6 +167,20 @@ export default function Home() {
     setSelectedFeelingGroup(null);
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle scroll-to-top button visibility
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 600);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   if (!dataExists) {
     return (
       <div className="min-h-screen bg-stone-50 dark:bg-stone-900 flex items-center justify-center p-6">
@@ -215,6 +230,54 @@ export default function Home() {
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--background)' }}>
+      {/* Subtle breadcrumb */}
+      <div className="fixed top-4 left-4 sm:top-6 sm:left-6 z-10">
+        <a
+          href="https://lydiastudio.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs sm:text-sm transition-colors flex items-center gap-1.5"
+          style={{ color: 'var(--muted)', opacity: 0.5 }}
+          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+        >
+          <span>←</span>
+          <span>Lydia Studio</span>
+        </a>
+      </div>
+
+      {/* Scroll to top button */}
+      <button
+        onClick={scrollToTop}
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 w-12 h-12 sm:w-10 sm:h-10 rounded-full border shadow-sm flex items-center justify-center"
+        style={{
+          background: 'var(--card-bg)',
+          borderColor: 'var(--border)',
+          color: 'var(--muted)',
+          opacity: showScrollTop ? 0.8 : 0,
+          pointerEvents: showScrollTop ? 'auto' : 'none',
+          transition: 'opacity 0.3s ease',
+          marginBottom: 'env(safe-area-inset-bottom, 0px)'
+        }}
+        aria-label="Scroll to top"
+        onMouseEnter={(e) => {
+          if (showScrollTop) {
+            e.currentTarget.style.borderColor = 'var(--accent-soft)';
+            e.currentTarget.style.color = 'var(--foreground)';
+            e.currentTarget.style.opacity = '1';
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (showScrollTop) {
+            e.currentTarget.style.borderColor = 'var(--border)';
+            e.currentTarget.style.color = 'var(--muted)';
+            e.currentTarget.style.opacity = '0.8';
+          }
+        }}
+      >
+        <span className="text-lg">↑</span>
+      </button>
+
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <header className="mb-12 max-w-3xl">
           <div className="mb-3 text-sm" style={{ color: 'var(--muted)' }}>
