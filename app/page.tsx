@@ -47,6 +47,7 @@ export default function Home() {
   const [selectedSensoryLoad, setSelectedSensoryLoad] = useState<SensoryLoad | "all">("all");
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [selectedFeelingGroup, setSelectedFeelingGroup] = useState<string | null>(null);
 
   const availableSupportNeeds = useMemo(() => {
     const needsSet = new Set<SupportNeed>();
@@ -123,6 +124,7 @@ export default function Home() {
     if (group) {
       setSelectedSupportNeeds(new Set(group.needs));
       setSelectedCategory("all");
+      setSelectedFeelingGroup(groupKey);
     }
   };
 
@@ -134,6 +136,7 @@ export default function Home() {
     setSelectedSetupEffort("all");
     setSelectedSensoryLoad("all");
     setFeaturedOnly(false);
+    setSelectedFeelingGroup(null);
   };
 
   if (!dataExists) {
@@ -226,24 +229,32 @@ export default function Home() {
             If you're feeling...
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {Object.entries(FEELING_GROUPS).map(([key, group]) => (
-              <button
-                key={key}
-                onClick={() => selectFeelingGroup(key)}
-                className="flex items-center gap-3 px-5 py-4 rounded-2xl hover:shadow-sm transition-all text-left border"
-                style={{
-                  background: 'var(--background)',
-                  borderColor: 'var(--border)'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--accent-soft)'}
-                onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--border)'}
-              >
-                <span className="text-3xl">{group.emoji}</span>
-                <span className="font-medium" style={{ color: 'var(--foreground)' }}>
-                  {group.label}
-                </span>
-              </button>
-            ))}
+            {Object.entries(FEELING_GROUPS).map(([key, group]) => {
+              const isSelected = selectedFeelingGroup === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => selectFeelingGroup(key)}
+                  className="flex items-center gap-3 px-5 py-4 rounded-2xl hover:shadow-sm transition-all text-left border"
+                  style={{
+                    background: isSelected ? 'var(--accent-soft)' : 'var(--background)',
+                    borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
+                    boxShadow: isSelected ? '0 0 0 3px var(--accent-soft)' : undefined
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) e.currentTarget.style.borderColor = 'var(--accent-soft)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)';
+                  }}
+                >
+                  <span className="text-3xl">{group.emoji}</span>
+                  <span className="font-medium" style={{ color: 'var(--foreground)' }}>
+                    {group.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
 
