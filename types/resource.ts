@@ -53,9 +53,9 @@ export const SUPPORT_NEED_LABELS: Record<SupportNeed, string> = {
 };
 
 export const CATEGORY_LABELS: Record<Category, string> = {
-  tool: "Tool",
-  method: "Method",
-  community: "Community",
-  content: "Content",
-  physical: "Physical",
+  tool: "Tools",
+  method: "Practices",
+  community: "People & spaces",
+  content: "Media",
+  physical: "Physical supports",
 };

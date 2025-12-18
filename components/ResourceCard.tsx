@@ -20,8 +20,8 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
   const [imageError, setImageError] = useState(false);
   const faviconUrl = `https://www.google.com/s2/favicons?domain=${resource.domain}&sz=128`;
 
-  const primaryNeeds = resource.support_needs.slice(0, 3);
-  const hasMore = resource.support_needs.length > 3;
+  const primaryNeeds = resource.support_needs.slice(0, 2);
+  const hasMore = resource.support_needs.length > 2;
 
   return (
     <article className="rounded-2xl p-6 hover:shadow-sm transition-all border group" style={{
@@ -86,19 +86,19 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
                 ))}
                 {hasMore && (
                   <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm" style={{ color: 'var(--muted)' }}>
-                    +{resource.support_needs.length - 3} more
+                    +{resource.support_needs.length - 2} more
                   </span>
                 )}
               </div>
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3 text-sm" style={{ color: 'var(--muted)' }}>
+          <div className="flex flex-wrap items-center gap-2 text-xs opacity-60" style={{ color: 'var(--muted)' }}>
             <span className="capitalize">{resource.price_type}</span>
             <span>·</span>
             <span className="capitalize">{resource.setup_effort} setup</span>
             <span>·</span>
-            <span className="capitalize">{resource.sensory_load} sensory load</span>
+            <span className="capitalize">{resource.sensory_load} sensory</span>
             <span>·</span>
             <span>{resource.domain}</span>
           </div>
