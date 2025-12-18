@@ -109,6 +109,33 @@ export default function Home() {
     featuredOnly,
   ]);
 
+  // Group resources by sections
+  const groupedResources = useMemo(() => {
+    const groups: Record<string, Resource[]> = {
+      featured: [],
+      time: [],
+      getting_started: [],
+      communities: [],
+      other: [],
+    };
+
+    filteredResources.forEach((resource) => {
+      if (resource.featured) {
+        groups.featured.push(resource);
+      } else if (resource.support_needs.includes("time_blindness") || resource.support_needs.includes("transitioning")) {
+        groups.time.push(resource);
+      } else if (resource.setup_effort === "low" || resource.category === "method") {
+        groups.getting_started.push(resource);
+      } else if (resource.category === "community") {
+        groups.communities.push(resource);
+      } else {
+        groups.other.push(resource);
+      }
+    });
+
+    return groups;
+  }, [filteredResources]);
+
   const toggleSupportNeed = (need: SupportNeed) => {
     const newSet = new Set(selectedSupportNeeds);
     if (newSet.has(need)) {
@@ -218,16 +245,19 @@ export default function Home() {
           </div>
         </header>
 
-        <div className="mb-12 rounded-2xl p-8 border" style={{
+        <div className="mb-12 rounded-2xl p-8 border-2 shadow-sm" style={{
           background: 'var(--card-bg)',
-          borderColor: 'var(--border)'
+          borderColor: 'var(--accent)',
+          opacity: 0.98
         }}>
-          <h2 className="text-lg font-semibold mb-4" style={{ color: 'var(--foreground)' }}>
-            Not sure where to start?
-          </h2>
-          <p className="mb-6" style={{ color: 'var(--muted)' }}>
-            If you're feeling...
-          </p>
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
+              Not sure where to start?
+            </h2>
+            <p className="text-base" style={{ color: 'var(--muted)' }}>
+              Choose what you're feeling right now, and we'll show you tools that might help
+            </p>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {Object.entries(FEELING_GROUPS).map(([key, group]) => {
               const isSelected = selectedFeelingGroup === key;
@@ -235,23 +265,32 @@ export default function Home() {
                 <button
                   key={key}
                   onClick={() => selectFeelingGroup(key)}
-                  className="flex items-center gap-3 px-5 py-4 rounded-2xl hover:shadow-sm transition-all text-left border"
+                  className="flex items-center gap-3 px-6 py-5 rounded-2xl hover:shadow-md transition-all text-left border-2"
                   style={{
                     background: isSelected ? 'var(--accent-soft)' : 'var(--background)',
                     borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
-                    boxShadow: isSelected ? '0 0 0 3px var(--accent-soft)' : undefined
+                    boxShadow: isSelected ? '0 0 0 3px var(--accent-soft)' : undefined,
+                    transform: isSelected ? 'scale(1.02)' : undefined
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.borderColor = 'var(--accent-soft)';
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = 'var(--accent-soft)';
+                      e.currentTarget.style.transform = 'scale(1.01)';
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    if (!isSelected) e.currentTarget.style.borderColor = 'var(--border)';
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = 'var(--border)';
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }
                   }}
                 >
-                  <span className="text-3xl">{group.emoji}</span>
-                  <span className="font-medium" style={{ color: 'var(--foreground)' }}>
-                    {group.label}
-                  </span>
+                  <span className="text-4xl">{group.emoji}</span>
+                  <div className="flex-1">
+                    <span className="font-semibold text-base block" style={{ color: 'var(--foreground)' }}>
+                      I feel {group.label}
+                    </span>
+                  </div>
                 </button>
               );
             })}
@@ -439,13 +478,7 @@ export default function Home() {
           )}
         </div>
 
-        <div className="space-y-4">
-          {filteredResources.map((resource) => (
-            <ResourceCard key={resource.id} resource={resource} />
-          ))}
-        </div>
-
-        {filteredResources.length === 0 && (
+        {filteredResources.length === 0 ? (
           <div className="text-center py-16 rounded-2xl border" style={{
             background: 'var(--card-bg)',
             borderColor: 'var(--border)'
@@ -460,6 +493,78 @@ export default function Home() {
             >
               Clear filters and start over
             </button>
+          </div>
+        ) : (
+          <div className="space-y-16">
+            {groupedResources.featured.length > 0 && (
+              <section>
+                <h2 className="text-lg font-semibold mb-5 flex items-center gap-2.5" style={{ color: 'var(--foreground)' }}>
+                  <span className="text-xl">⭐</span>
+                  Featured
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {groupedResources.featured.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {groupedResources.time.length > 0 && (
+              <section>
+                <h2 className="text-lg font-semibold mb-5 flex items-center gap-2.5" style={{ color: 'var(--foreground)' }}>
+                  <span className="text-xl">🕒</span>
+                  Time awareness tools
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {groupedResources.time.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {groupedResources.getting_started.length > 0 && (
+              <section>
+                <h2 className="text-lg font-semibold mb-5 flex items-center gap-2.5" style={{ color: 'var(--foreground)' }}>
+                  <span className="text-xl">🧠</span>
+                  Getting started / low effort
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {groupedResources.getting_started.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {groupedResources.communities.length > 0 && (
+              <section>
+                <h2 className="text-lg font-semibold mb-5 flex items-center gap-2.5" style={{ color: 'var(--foreground)' }}>
+                  <span className="text-xl">🧩</span>
+                  Communities & body-doubling
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {groupedResources.communities.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {groupedResources.other.length > 0 && (
+              <section>
+                <h2 className="text-lg font-semibold mb-5 flex items-center gap-2.5" style={{ color: 'var(--foreground)' }}>
+                  <span className="text-xl">✨</span>
+                  More resources
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                  {groupedResources.other.map((resource) => (
+                    <ResourceCard key={resource.id} resource={resource} />
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </div>
