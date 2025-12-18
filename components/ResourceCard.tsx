@@ -27,8 +27,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
   return (
     <article className="rounded-2xl p-5 transition-all border group" style={{
       background: 'var(--card-bg)',
-      borderColor: 'var(--border)',
-      opacity: 0.95
+      borderColor: 'var(--border)'
     }}>
       <div className="flex gap-4">
         <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center">
@@ -36,11 +35,11 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
             <img
               src={faviconUrl}
               alt=""
-              className="w-12 h-12 rounded-xl opacity-90"
+              className="w-12 h-12 rounded-xl"
               onError={() => setImageError(true)}
             />
           ) : (
-            <div className="w-12 h-12 flex items-center justify-center text-2xl rounded-xl opacity-90" style={{
+            <div className="w-12 h-12 flex items-center justify-center text-2xl rounded-xl" style={{
               background: 'var(--background)'
             }}>
               {CATEGORY_ICONS[resource.category]}
@@ -70,8 +69,10 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
           {!showDetails ? (
             <button
               onClick={() => setShowDetails(true)}
-              className="text-xs transition-colors hover:underline"
+              className="text-xs transition-colors hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 rounded px-1 -mx-1"
               style={{ color: 'var(--muted)' }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--foreground)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
             >
               Show details
             </button>
@@ -90,8 +91,7 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
                         style={{
                           background: 'var(--accent-soft)',
                           borderColor: 'var(--accent)',
-                          color: 'var(--foreground)',
-                          opacity: 0.9
+                          color: 'var(--foreground)'
                         }}
                       >
                         {SUPPORT_NEED_LABELS[need]}
@@ -106,20 +106,22 @@ export default function ResourceCard({ resource }: ResourceCardProps) {
                 </div>
               )}
 
-              <div className="flex flex-wrap items-center gap-2 text-xs" style={{ color: 'var(--muted)', opacity: 0.7 }}>
+              <div className="flex flex-wrap items-center gap-2 text-xs" style={{ color: 'var(--muted)' }}>
                 <span className="capitalize">{resource.price_type}</span>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <span className="capitalize">{resource.setup_effort} setup</span>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <span className="capitalize">{resource.sensory_load} sensory</span>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <span>{resource.domain}</span>
               </div>
 
               <button
                 onClick={() => setShowDetails(false)}
-                className="text-xs transition-colors hover:underline"
+                className="text-xs transition-colors hover:underline focus:outline-none focus:ring-2 focus:ring-offset-2 rounded px-1 -mx-1"
                 style={{ color: 'var(--muted)' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--foreground)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
               >
                 Hide details
               </button>

@@ -237,11 +237,11 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
           className="text-xs sm:text-sm transition-colors flex items-center gap-1.5"
-          style={{ color: 'var(--muted)', opacity: 0.5 }}
-          onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
-          onMouseLeave={(e) => e.currentTarget.style.opacity = '0.5'}
+          style={{ color: 'var(--muted)' }}
+          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--foreground)'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--muted)'}
         >
-          <span>←</span>
+          <span aria-hidden="true">←</span>
           <span>Lydia Studio</span>
         </a>
       </div>
@@ -253,29 +253,29 @@ export default function Home() {
         style={{
           background: 'var(--card-bg)',
           borderColor: 'var(--border)',
-          color: 'var(--muted)',
-          opacity: showScrollTop ? 0.8 : 0,
+          color: 'var(--foreground)',
+          opacity: showScrollTop ? 1 : 0,
           pointerEvents: showScrollTop ? 'auto' : 'none',
           transition: 'opacity 0.3s ease',
           marginBottom: 'env(safe-area-inset-bottom, 0px)'
         }}
         aria-label="Scroll to top"
+        aria-hidden={!showScrollTop}
+        tabIndex={showScrollTop ? 0 : -1}
         onMouseEnter={(e) => {
           if (showScrollTop) {
-            e.currentTarget.style.borderColor = 'var(--accent-soft)';
-            e.currentTarget.style.color = 'var(--foreground)';
-            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.borderColor = 'var(--accent)';
+            e.currentTarget.style.background = 'var(--accent-soft)';
           }
         }}
         onMouseLeave={(e) => {
           if (showScrollTop) {
             e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.color = 'var(--muted)';
-            e.currentTarget.style.opacity = '0.8';
+            e.currentTarget.style.background = 'var(--card-bg)';
           }
         }}
       >
-        <span className="text-lg">↑</span>
+        <span className="text-lg" aria-hidden="true">↑</span>
       </button>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -310,8 +310,7 @@ export default function Home() {
 
         <div className="mb-12 rounded-2xl p-8 border-2 shadow-sm" style={{
           background: 'var(--card-bg)',
-          borderColor: 'var(--accent)',
-          opacity: 0.98
+          borderColor: 'var(--accent)'
         }}>
           <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold mb-2" style={{ color: 'var(--foreground)' }}>
@@ -328,13 +327,14 @@ export default function Home() {
                 <button
                   key={key}
                   onClick={() => selectFeelingGroup(key)}
-                  className="flex items-center gap-3 px-6 py-5 rounded-2xl hover:shadow-md transition-all text-left border-2"
+                  className="flex items-center gap-3 px-6 py-5 rounded-2xl hover:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all text-left border-2"
                   style={{
                     background: isSelected ? 'var(--accent-soft)' : 'var(--background)',
                     borderColor: isSelected ? 'var(--accent)' : 'var(--border)',
                     boxShadow: isSelected ? '0 0 0 3px var(--accent-soft)' : undefined,
                     transform: isSelected ? 'scale(1.02)' : undefined
                   }}
+                  aria-pressed={isSelected}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
                       e.currentTarget.style.borderColor = 'var(--accent-soft)';
@@ -348,7 +348,7 @@ export default function Home() {
                     }
                   }}
                 >
-                  <span className="text-4xl">{group.emoji}</span>
+                  <span className="text-4xl" aria-hidden="true">{group.emoji}</span>
                   <div className="flex-1">
                     <span className="font-semibold text-base block" style={{ color: 'var(--foreground)' }}>
                       I feel {group.label}
