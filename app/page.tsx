@@ -289,7 +289,7 @@ export default function Home() {
           <p className="text-xl leading-relaxed" style={{ color: 'var(--muted)' }}>
             Tools, practices, and supports for when focus is hard, time feels invisible, or you just need a softer way through the day.
           </p>
-          <div className="mt-6">
+          {/* <div className="mt-6">
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSeLFxEkB1WoeYkZT4g6qnwdcDMTJk4HaHjIJumPMIjFB6RDAg/viewform?usp=header"
               target="_blank"
@@ -305,7 +305,7 @@ export default function Home() {
               Submit a resource
               <span style={{ color: 'var(--muted)' }}>→</span>
             </a>
-          </div>
+          </div> */}
         </header>
 
         <div className="mb-12 rounded-2xl p-8 border-2 shadow-sm" style={{
